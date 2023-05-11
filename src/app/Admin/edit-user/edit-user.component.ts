@@ -18,9 +18,14 @@ export class EditUserComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router
   ) {
-    const state = this.router.getCurrentNavigation()?.extras.state as {
+    let state = this.router.getCurrentNavigation()?.extras.state as {
       email: string;
     };
+    console.log("satate is :", state);
+    if(!state)
+    {
+      this.router.navigate(['admin/adminDash/list']);
+    }
     this.userEmail = state.email;
     console.log(this.userEmail);
   }

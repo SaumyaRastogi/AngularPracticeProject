@@ -19,22 +19,21 @@ export class UserEditComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router
   ) {
-    const state = this.router.getCurrentNavigation()?.extras.state as {
-      email: string;
-    };
+    const state = JSON.parse(localStorage.getItem('loginInfo') || '{}')
     this.userEmail = state.email;
     console.log(this.userEmail);
   }
 
   ngOnInit() {
     let user = this.dataService.findUserByEmail(this.userEmail);
+    let userData = JSON.parse(localStorage.getItem('currentUserInfo') || '{}');
+    console.log("ye hai data",userData)
     this.role = user.role;
     this.registrationForm = this.fb.group({
-      role: [user?.role, Validators.required],
-      userName: [user?.userName, Validators.required],
-      email: [user?.email, [Validators.required, Validators.email]],
-      contact: [user?.contact, Validators.required],
-      //skills: this.buildSkills()
+      role: [userData?.role, Validators.required],
+      userName: [userData?.userName, Validators.required],
+      email: [userData?.email, [Validators.required, Validators.email]],
+      contact: [userData?.contact, Validators.required]
     });
   }
 
