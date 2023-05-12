@@ -20,3 +20,8 @@
   .headerTop{
       position: fixed;
   } */
+
+  .container{
+    position: relative;
+    margin: 100px
+  }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { facebookBoxIcon } from '@progress/kendo-svg-icons';
@@ -9,7 +9,7 @@ import { ChangeLanguageService } from 'src/app/Services/Language/change-language
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit{
   isLoggedin: boolean;
   userName : string;
   showUsername = ""
@@ -23,11 +23,12 @@ export class HeaderComponent implements OnInit {
     let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
     this.isLoggedin = info.email ? true : false;
     let userData = JSON.parse(localStorage.getItem('currentUserInfo') || '{}');
-    console.log("ye hai user data", userData) 
     this.userName = userData.userName
     if(this.userName){
       this.showUsername = "," + " " + this.userName
     }
+    console.log("ye hai user data", userData) 
+
     translate.addLangs(['en', 'hin']);
     translate.setDefaultLang('en');
     translate.use('en');
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
 
   logout() {
     console.log('loggedout!!!');

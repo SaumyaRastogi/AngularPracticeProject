@@ -39,18 +39,10 @@ export class EditUserComponent implements OnInit {
       userName: [user?.userName, Validators.required],
       email: [user?.email, [Validators.required, Validators.email]],
       contact: [user?.contact, Validators.required],
-      skills: this.fb.group({
-        HTML: [false],
-        CSS: [false],
-        JavaScript: [false],
-        Angular: [false],
-        React: [false],
-        Vue: [false]
-      }),
+      skills: [user?.skills]
     });
-    this.registrationForm.get('skills')?.valueChanges.subscribe(val => {
-      this.selectedSkills = Object.keys(val).filter(key => val[key]);
-    });
+    this.registrationForm.value.skills.forEach((x : any)=> this.selectedSkills.push(x))
+    console.log(this.selectedSkills)
   }
 
  
