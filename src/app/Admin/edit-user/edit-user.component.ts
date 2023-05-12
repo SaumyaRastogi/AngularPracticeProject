@@ -11,7 +11,8 @@ export class EditUserComponent implements OnInit {
   registrationForm!: FormGroup;
   userEmail: string;
   role: string;
-  skills: string[] = ['HTML', 'CSS', 'JavaScript', 'Angular', 'React', 'Vue'];
+  selectedSkills: string[] = [];
+  skillsList: string[] = ['HTML', 'CSS', 'JavaScript', 'Angular', 'React', 'Vue',];
 
   constructor(
     public dataService: DataManagementService,
@@ -38,15 +39,21 @@ export class EditUserComponent implements OnInit {
       userName: [user?.userName, Validators.required],
       email: [user?.email, [Validators.required, Validators.email]],
       contact: [user?.contact, Validators.required],
+      skills: this.fb.group({
+        HTML: [false],
+        CSS: [false],
+        JavaScript: [false],
+        Angular: [false],
+        React: [false],
+        Vue: [false]
+      }),
+    });
+    this.registrationForm.get('skills')?.valueChanges.subscribe(val => {
+      this.selectedSkills = Object.keys(val).filter(key => val[key]);
     });
   }
 
-  buildSkills() {
-    const skillsArr = this.skills.map((skill) => {
-      return this.fb.control(false);
-    });
-    return this.fb.array(skillsArr);
-  }
+ 
 
   passwordMatchValidator(frm: FormGroup) {
     return frm.controls['password'].value ===
