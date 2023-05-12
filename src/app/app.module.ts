@@ -15,9 +15,10 @@ import {
 } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditUserComponent } from './Admin/edit-user/edit-user.component';
+import { Observable } from 'rxjs';
 
 export function initializeAppData(dataInitService: DataManagementService) {
-  return (): Promise<any> => {
+  return (): Observable<any> => {
     return dataInitService.Init();
   };
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
 import { Users } from 'src/app/Models/UserData';
 import { usersData } from 'src/constants/const-data';
 
@@ -12,10 +13,17 @@ export class DataManagementService {
   constructor() {}
 
   Init() {
-    return new Promise<void>((resolve, reject) => {
-      console.log('AppInitService.init() called', usersData);
+    // return new Promise<void>((resolve, reject) => {
+    //   console.log('AppInitService.init() called', usersData);
+    //   this.users = usersData.user;
+    //   resolve();
+    // });
+    return new Observable((subscriber) => {
+      
+      console.log('AppInitService.init() called coming from observable', usersData);
       this.users = usersData.user;
-      resolve();
+      subscriber.complete();      
+
     });
   }
 
