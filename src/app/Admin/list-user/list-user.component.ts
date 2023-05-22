@@ -5,15 +5,18 @@ import { DataManagementService } from 'src/app/Services/DataManagement/data-mana
 import { Users } from 'src/app/Models/UserData';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ExcelService } from '../../Services/ExcelService/excel.service';
 @Component({
   selector: 'app-list-user',
   templateUrl: './list-user.component.html',
   styleUrls: ['./list-user.component.css'],
 })
 export class ListUserComponent implements OnInit {
+  dataSource: any;
   constructor(
     public dataService: DataManagementService,
-    private router: Router
+    private router: Router,
+    private excelService: ExcelService
   ) {}
 
   public gridData: Users[];
@@ -38,7 +41,7 @@ export class ListUserComponent implements OnInit {
       });
       this.gridView = this.gridData;
       console.log("grid data",this.gridData);
-      //this.gridData = data
+      // this.gridData = data
     });
 
 
@@ -85,7 +88,19 @@ export class ListUserComponent implements OnInit {
     });
   }
 
-  exportAsExcel(data:any){
-    console.log("Export as excel")
+  exportAsExcel() {
+    // Map the gridData to include the skills field
+    const jsonData = this.gridData.map(user => {
+      return {
+        userName: user.userName,
+        email: user.email,
+        skills: user.skills.join(', '), // Convert skills array to comma-separated string
+        contact: user.contact
+      };
+    });
+  
+    this.excelService.exportAsExcelFile(jsonData, 'userdetails');
   }
+  
+
 }

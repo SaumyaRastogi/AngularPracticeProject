@@ -16,6 +16,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditUserComponent } from './Admin/edit-user/edit-user.component';
 import { Observable } from 'rxjs';
+import { ExcelService } from './Services/ExcelService/excel.service';
 
 export function initializeAppData(dataInitService: DataManagementService) {
   return (): Observable<any> => {
@@ -46,6 +47,7 @@ export function initializeAppData(dataInitService: DataManagementService) {
       deps: [DataManagementService],
       multi: true,
     },
+    ExcelService
   ],
   exports: [JoinPipe],
   bootstrap: [AppComponent],
