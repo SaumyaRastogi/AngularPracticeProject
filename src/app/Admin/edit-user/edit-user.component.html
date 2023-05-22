@@ -34,15 +34,28 @@
           </td>
         </tr>
         <td>
-          <label>
-            Skills List:
+          <label>Skills:</label>
             <div formGroupName="skills" class="checkbox-container">
-              <label *ngFor="let skill of skillsList" for="my-checkbox">
-                <input type="checkbox" [value]="skill" [checked]="selectedSkills.includes(skill)">
-                {{ skill }}
+              <label
+                ><input type="checkbox" formControlName="HTML" />HTML
               </label>
+              <label><input type="checkbox" formControlName="CSS" />CSS </label>
+              <label>
+                <input
+                  type="checkbox"
+                  formControlName="JavaScript"/>JavaScript
+              </label>
+              <label
+                ><input
+                  type="checkbox"
+                  formControlName="Angular"
+                />Angular</label
+              >
+              <label
+                ><input type="checkbox" formControlName="React" />React</label
+              >
+              <label><input type="checkbox" formControlName="Vue" />Vue</label>
             </div>
-          </label>
         </td>
       </table>
       <button type="submit" (click)="updateUser()">Update</button>

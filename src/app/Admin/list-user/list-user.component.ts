@@ -25,13 +25,10 @@ export class ListUserComponent implements OnInit {
 
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridView: unknown[];
-
   public mySelection: string[] = [];
 
   ngOnInit(){
     this.gridData = [];
-    console.log("list-user-init")
-
     this.userList$ = this.dataService.findAllUser();
     
     this.userList$.subscribe((data)=>  {
@@ -40,13 +37,8 @@ export class ListUserComponent implements OnInit {
         this.gridData.push(element)
       });
       this.gridView = this.gridData;
-      console.log("grid data",this.gridData);
-      // this.gridData = data
     });
-
-
   }
-
 
   public onFilter(input: Event): void {
     const inputValue = (input.target as HTMLInputElement).value;
@@ -82,7 +74,7 @@ export class ListUserComponent implements OnInit {
   }
 
   editUser(data: any) {
-    console.log(data);
+    console.log("user to be editted", data);
     this.router.navigate(['admin/adminDash/editUser'], {
       state: { email: data.email },
     });

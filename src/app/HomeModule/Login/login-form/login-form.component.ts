@@ -6,6 +6,7 @@ import { ChangeLanguageService } from 'src/app/Services/Language/change-language
 import { AuthService } from 'src/app/Services/AuthService/auth.service';
 import { DataManagementService } from 'src/app/Services/DataManagement/data-management.service';
 import { Users } from 'src/app/Models/UserData';
+import { CurrentUserService } from 'src/app/Services/CurrenrUser/current-user.service';
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
@@ -23,7 +24,8 @@ export class LoginFormComponent implements OnInit {
     private langService: ChangeLanguageService,
     public translate: TranslateService,
     private authService: AuthService,
-    private dataService: DataManagementService
+    private dataService: DataManagementService,
+    private currentUserService : CurrentUserService
   ) {
     this.translate.use(this.langService.selectedLanguage.value);
   }
@@ -46,6 +48,10 @@ export class LoginFormComponent implements OnInit {
         this.loginForm.value.email,
         this.loginForm.value.password
       );
+      
+      this.langService.selectedLanguage.next(user);
+      this.currentUserService.currentUser.next(user)
+      // this.currentUserService.currentUser = user;
       if (user.isAdmin == true) {
         this.router.navigate(['admin/adminDash/list']);
       } else {

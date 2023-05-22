@@ -27,22 +27,14 @@
             <label>
               Role:
               <select  formControlName="role" >
-                <option  value="user" [attr.selected]="currentUser.role == 'admin' ? true : null" > Admin</option>
-                <option  value="admin"[attr.selected]="currentUser.role == 'user' ? true : null">User</option>
+                <option  value="user" selected="role"> Admin</option>
+                <option  value="admin" selected="role">User</option>
               </select>
             </label>
           </td>
         </tr>
         <td>
-          <!-- <label>
-            Skills List:
-            <div formGroupName="skills" class="checkbox-container">
-              <label *ngFor="let skill of skillsList" for="my-checkbox">
-                <input type="checkbox" [value]="skill" [checked]="selectedSkills.includes(skill)">
-                {{ skill }}
-              </label>
-            </div>
-          </label> -->
+
           <label>Skills:</label>
             <div formGroupName="skills" class="checkbox-container">
               <label
