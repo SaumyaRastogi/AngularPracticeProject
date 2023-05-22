@@ -1,6 +1,6 @@
 <div class="register-container">
   <div class="registerSubContainer" id="test">
-    <form [formGroup]="registrationForm">
+    <form [formGroup]="registrationForm" *ngIf="registrationForm">
       <table>
         <tr>
           <td>
@@ -12,7 +12,7 @@
           <td>
             <label>
               Email:
-              <input type="email" formControlName="email" />
+              <input  readonly type="email"  formControlName="email"   />
             </label>
           </td>
           <td>
@@ -26,9 +26,9 @@
           <td>
             <label>
               Role:
-              <select formControlName="role">
-                <option value="user" [ngValue]="role">User</option>
-                <option value="admin">Admin</option>
+              <select  formControlName="role" >
+                <option  value="user" selected="role"> Admin</option>
+                <option  value="admin" selected="role">User</option>
               </select>
             </label>
           </td>

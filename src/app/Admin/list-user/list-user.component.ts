@@ -4,6 +4,7 @@ import { process } from '@progress/kendo-data-query';
 import { DataManagementService } from 'src/app/Services/DataManagement/data-management.service';
 import { Users } from 'src/app/Models/UserData';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-list-user',
   templateUrl: './list-user.component.html',
@@ -15,21 +16,37 @@ export class ListUserComponent implements OnInit {
     private router: Router
   ) {}
 
-  public gridData: Users[] = this.dataService.users;
+  public gridData: Users[];
+  userList$ : Observable<Users[]>
+  userList : Users[];
 
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridView: unknown[];
 
   public mySelection: string[] = [];
 
-  public ngOnInit(): void {
-    this.gridView = this.gridData;
+  ngOnInit(){
+    this.gridData = [];
+    console.log("list-user-init")
+
+    this.userList$ = this.dataService.findAllUser();
+    
+    this.userList$.subscribe((data)=>  {
+      console.log("List of users",this)
+      data.forEach((element: any) => {
+        this.gridData.push(element)
+      });
+      this.gridView = this.gridData;
+      console.log("grid data",this.gridData);
+      //this.gridData = data
+    });
+
+
   }
+
 
   public onFilter(input: Event): void {
     const inputValue = (input.target as HTMLInputElement).value;
-    console.log('onFilter ');
-
     this.gridView = process(this.gridData, {
       filter: {
         logic: 'or',
@@ -49,6 +66,11 @@ export class ListUserComponent implements OnInit {
             operator: 'contains',
             value: inputValue,
           },
+          {
+            field: 'contact',
+            operator: 'contains',
+            value: inputValue,
+          },
         ],
       },
     }).data;
@@ -61,5 +83,9 @@ export class ListUserComponent implements OnInit {
     this.router.navigate(['admin/adminDash/editUser'], {
       state: { email: data.email },
     });
+  }
+
+  exportAsExcel(data:any){
+    console.log("Export as excel")
   }
 }

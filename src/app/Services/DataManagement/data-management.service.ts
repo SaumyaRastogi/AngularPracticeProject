@@ -2,81 +2,122 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Users } from 'src/app/Models/UserData';
 import { usersData } from 'src/constants/const-data';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataManagementService {
   users: Users[];
-
-  //user:any[];
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   Init() {
-    // return new Promise<void>((resolve, reject) => {
-    //   console.log('AppInitService.init() called', usersData);
-    //   this.users = usersData.user;
-    //   resolve();
-    // });
     return new Observable((subscriber) => {
-      
-      console.log('AppInitService.init() called coming from observable', usersData);
-      this.users = usersData.user;
-      subscriber.complete();      
-
+      console.log(
+        'AppInitService.init() called coming from observable',
+        usersData
+      );
+      subscriber.complete();
     });
   }
 
-  addUser(userEntered: Users) {
+  addUser(userEntered: Users): Observable<Users> {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    };
+
     if (userEntered.role == 'admin') {
       userEntered.isAdmin == true;
     } else {
       userEntered.isAdmin = false;
     }
-    this.users.push(userEntered);
-
-    this.users.forEach((user) => {
-      console.log(user);
+    const addedUser$ = this.http.post<Users>(
+      'http://localhost:3000/registerNewUser',
+      userEntered,
+      config
+    );
+    addedUser$.subscribe((data) => {
+      console.log('addUser', data);
     });
+    return addedUser$;
   }
 
-  findUserByEmail(email: string) {
-    let retUser: Users = {
-      email: 'null',
-      userName: 'null',
-      password: 'null',
-      isAdmin: false,
-      contact: 'null',
-      skills: [],
-      role: '',
+  findUserByEmail(email: string): Observable<Users> {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
     };
-    console.log("yahain call nahi ho raghi hai pata nahi kyuuu");
-    this.users.forEach((user) => {
-      if (user.email == email) {
-        retUser = user;
-        localStorage.setItem('currentUserInfo', JSON.stringify(retUser))
-      }
+
+    const userByEmail$ = this.http.get<Users>(
+      `http://localhost:3000/getUserByEmail/${email}`,
+      config
+    );
+    userByEmail$.subscribe((data) => {
+      console.log('findUserByEmail', data);
     });
 
-    return retUser;
+    return userByEmail$;
   }
 
-  updateUser(userdeatails: Users) {
-    let retUser: Users = {
-      email: 'null',
-      userName: 'null',
-      password: 'null',
-      isAdmin: false,
-      contact: 'null',
-      skills: [],
-      role: '',
+  findCurrentUser(): Observable<Users> {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
     };
-    for (let i = 0; i < this.users.length; i++) {
-      if (this.users[i].email == userdeatails.email) {
-        this.users[i] = { ...this.users[i], ...userdeatails };
-        return this.users[i];
-      }
-    }
-    return retUser;
+
+    const currentUser$ = this.http.get<Users>(
+      'http://localhost:3000/currentUser',
+      config
+    );
+    currentUser$.subscribe((data) => {
+      console.log('findCurrentUser', data);
+    });
+
+    return currentUser$;
+  }
+
+  findAllUser(): Observable<Users[]> {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    };
+
+    const allUser$ = this.http.get<Users[]>(
+      'http://localhost:3000/getAllUsers',
+      config
+    );
+
+    allUser$.subscribe((data) => {
+      console.log('findAllUser', data);
+    });
+    return allUser$;
+  }
+
+  findUserByUserName(userName: string): Observable<Users> {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    };
+
+    const userByUserName$ = this.http.post<Users>(
+      'http://localhost:3000/user/name/',
+      config
+    );
+    userByUserName$.subscribe((data) => {
+      console.log('findUserByUserName', data);
+    });
+    return userByUserName$;
+  }
+
+  updateUser(userdetails: any) {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    };
+    console.log("update user called ", userdetails)
+    const updatedUser$ = this.http.post<Users>(
+      'http://localhost:3000/updateUser',
+      userdetails,
+      config
+    );
+    updatedUser$.subscribe((data) => {
+      console.log('Useradded', data);
+    });
+    return updatedUser$;
   }
 }

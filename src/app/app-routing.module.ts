@@ -33,6 +33,10 @@ const routes: Routes = [
       ),
     pathMatch: 'prefix',
   },
+  {
+    path: '**',
+    redirectTo : ''
+  },
 ];
 
 @NgModule({

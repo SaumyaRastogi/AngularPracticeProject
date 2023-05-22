@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { DataManagementService } from '../DataManagement/data-management.service';
+import axios from 'axios';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private dataManagemnetService: DataManagementService) {}
+  constructor(private dataManagemnetService: DataManagementService,
+    private http : HttpClient) {}
+    loginDetails  :any
 
   loginInfo={
    email : "",
@@ -13,7 +17,7 @@ export class AuthService {
    isAdmin : ""
   }
 
-  IsLoggedIn(): string {
+  isLoggedIn(): string {
     let info= JSON.parse(localStorage.getItem('loginInfo') || '{}');
     console.log("IsLoggedIn called with :", info);
     if (!info.expTime) {
@@ -23,10 +27,29 @@ export class AuthService {
     return '' + info.expTime;
   }
 
-  login(userName: string, password: string) {
-    let user = this.dataManagemnetService.findUserByEmail(userName);
+  async login(email: string, password: string) {
+    const payload = {email : email, password:password}
+    let response = await this.http.post("http://localhost:3000/login", payload).toPromise();
+    this.loginDetails = response
+
+    console.log("login details", this.loginDetails)
+    // resposne$.subscribe((data) =>{
+    //   console.log("Login data", data)
+    //   this.loginDetails = data
+    // })
+
+   localStorage.setItem('authToken', this.loginDetails.token.toString());
+   //console.log("from login token is", resposne.data.token);
+
+    let user = this.loginDetails.user;
+    if(user.role == "admin")
+      user.isAdmin = true;
+    else
+      user.isAdmin = false;
+    
+
     console.log("login user :",user);
-    if (user.password!= "null" && user.password == password) {
+    if (user) {
       let expTime = Date.now() + 360000000;
       this.loginInfo.expTime = expTime?.toString();
       this.loginInfo.email = user.email;

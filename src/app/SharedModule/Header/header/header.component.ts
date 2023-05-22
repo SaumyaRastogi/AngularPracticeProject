@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnChanges, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { facebookBoxIcon } from '@progress/kendo-svg-icons';
@@ -15,11 +15,14 @@ export class HeaderComponent implements OnInit{
   showUsername = ""
   switchLang: string;
   browserLang: string;
+  cdr:any;
   constructor(
     private langService: ChangeLanguageService,
     public translate: TranslateService,
-    private router: Router
+    private router: Router,
+    _cdr: ChangeDetectorRef
   ) {
+    this.cdr = _cdr
     let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
     this.isLoggedin = info.email ? true : false;
     let userData = JSON.parse(localStorage.getItem('currentUserInfo') || '{}');
@@ -40,8 +43,23 @@ export class HeaderComponent implements OnInit{
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
 
+    this.langService.selectedLanguage.subscribe((val) => { this.translate.use(val); });
+  }
+
+  ngOnChange()
+  {
+
+  }
+
+  ngAfterViewInit()
+  {
+    let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
+    console.log("info v    sadadsafav ", localStorage.getItem('loginInfo') )
+    this.isLoggedin = info.email ? true : false;
+    this.cdr.detectChanges();
+  }
 
   logout() {
     console.log('loggedout!!!');
@@ -53,7 +71,7 @@ export class HeaderComponent implements OnInit{
   selectLanguage(languageCode: string) {
     console.log(languageCode);
     this.langService.selectedLanguage.next(languageCode);
-    this.translate.use(this.langService.selectedLanguage.value);
+    
   }
 
   languageChanged() {

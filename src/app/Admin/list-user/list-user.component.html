@@ -12,14 +12,18 @@
         [height]="400"
         [columnMenu]="{ filter: true }">
 
-        <kendo-grid-column field="userName" title="Name"> </kendo-grid-column>
-        <kendo-grid-column field="email" title="Email"> </kendo-grid-column>
-        <kendo-grid-column field="skills" title="Skill"> </kendo-grid-column>
-        <kendo-grid-column field="contact" title="Contact"> </kendo-grid-column>
-
+        <kendo-grid-column field="userName" [width]="200" title="Name"> </kendo-grid-column>
+        <kendo-grid-column field="email" [width]="200" title="Email"> </kendo-grid-column>
+        <kendo-grid-column field="skills" [width]="200" title="Skill"> </kendo-grid-column>
+        <kendo-grid-column field="contact" [width]="200" title="Contact"> </kendo-grid-column>
         <kendo-grid-column title="Edit" [width]="100">
             <ng-template kendoGridCellTemplate let-dataItem>
              <button class="k-button" (click)="editUser(dataItem)">Edit User</button>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column title="ExportAsExcel" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+             <button class="k-button" (click)="exportAsExcel(dataItem)">Export as Excel</button>
             </ng-template>
         </kendo-grid-column>
     </kendo-grid>

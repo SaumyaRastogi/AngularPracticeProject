@@ -36,6 +36,7 @@ export function initializeAppData(dataInitService: DataManagementService) {
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
+    HttpClientModule
   ],
   providers: [
     DataManagementService,

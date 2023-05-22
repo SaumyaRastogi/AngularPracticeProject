@@ -46,6 +46,7 @@
     "@progress/kendo-theme-default": "^6.3.0",
     "@progress/kendo-theme-material": "^6.3.0",
     "angular-reactive-form": "^1.0.0",
+    "axios": "^1.4.0",
     "deepmerge-ts": "^5.1.0",
     "ngx-translate-multi-http-loader": "^9.4.0",
     "rxjs": "~7.5.0",

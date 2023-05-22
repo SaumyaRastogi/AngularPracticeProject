@@ -1,6 +1,6 @@
 <div class="register-container">
   <div class="registerSubContainer" id="test">
-    <form [formGroup]="registrationForm">
+    <form [formGroup]="registrationForm" *ngIf="registrationForm">
       <table>
         <tr>
           <td>
@@ -26,15 +26,15 @@
           <td>
             <label>
               Role:
-              <select formControlName="role">
-                <option value="user" [ngValue]="role">User</option>
-                <option value="admin">Admin</option>
+              <select  formControlName="role" >
+                <option  value="user" [attr.selected]="currentUser.role == 'admin' ? true : null" > Admin</option>
+                <option  value="admin"[attr.selected]="currentUser.role == 'user' ? true : null">User</option>
               </select>
             </label>
           </td>
         </tr>
         <td>
-          <label>
+          <!-- <label>
             Skills List:
             <div formGroupName="skills" class="checkbox-container">
               <label *ngFor="let skill of skillsList" for="my-checkbox">
@@ -42,7 +42,29 @@
                 {{ skill }}
               </label>
             </div>
-          </label>
+          </label> -->
+          <label>Skills:</label>
+            <div formGroupName="skills" class="checkbox-container">
+              <label
+                ><input type="checkbox" formControlName="HTML" />HTML
+              </label>
+              <label><input type="checkbox" formControlName="CSS" />CSS </label>
+              <label>
+                <input
+                  type="checkbox"
+                  formControlName="JavaScript"/>JavaScript
+              </label>
+              <label
+                ><input
+                  type="checkbox"
+                  formControlName="Angular"
+                />Angular</label
+              >
+              <label
+                ><input type="checkbox" formControlName="React" />React</label
+              >
+              <label><input type="checkbox" formControlName="Vue" />Vue</label>
+            </div>
         </td>
       </table>
       <button type="submit" (click)="updateUser()">Update</button>

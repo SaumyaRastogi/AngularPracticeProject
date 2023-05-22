@@ -22,7 +22,7 @@ export class RegisterUserFormComponent implements OnInit {
     this.registrationForm = this.fb.group(
       {
         role: ['', Validators.required],
-        name: ['', Validators.required],
+        userName: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         contact: ['', Validators.required],
         skills: this.fb.group({

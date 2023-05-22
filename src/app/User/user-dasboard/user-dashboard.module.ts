@@ -8,6 +8,7 @@ import { AdminDashboardModule } from 'src/app/Admin/admin-dashboard-module/admin
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditUserComponent } from 'src/app/Admin/edit-user/edit-user.component';
+import { DataManagementService } from 'src/app/Services/DataManagement/data-management.service';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
   ],
+   providers :[DataManagementService]
 })
 export class UserDashboardModule {
   constructor() {

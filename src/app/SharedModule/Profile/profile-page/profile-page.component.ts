@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Users } from 'src/app/Models/UserData';
 //import { DataService } from '@progress/kendo-angular-dropdowns/common/data.service';
 import { DataManagementService } from 'src/app/Services/DataManagement/data-management.service';
@@ -11,6 +12,8 @@ import { DataManagementService } from 'src/app/Services/DataManagement/data-mana
 })
 export class ProfilePageComponent implements OnInit {
   registrationForm!: FormGroup;
+  currentUser$: Observable<Users>;
+  currentUser: Users;
   skills: string[] = ['HTML', 'CSS', 'JavaScript', 'Angular', 'React', 'Vue'];
   userSkills: string[] = [
     'HTML',
@@ -25,16 +28,15 @@ export class ProfilePageComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private dataService: DataManagementService
-  ) {
-    let info= JSON.parse(localStorage.getItem('loginInfo') || '{}');
-    let userEmail = '' + info.email;
-    let userData = JSON.parse(localStorage.getItem('currentUserInfo') || '{}');
+  ) {}
 
-    this.user = this.dataService.findUserByEmail(userEmail) ? this.dataService.findUserByEmail(userEmail) : userData;
-    console.log('Reg form aya');
+  async ngOnInit() {
+    this.currentUser$ = await this.dataService.findCurrentUser();
+    this.currentUser$.subscribe((data) => {
+      console.log('Current user', data);
+      this.currentUser = data;
+    });
   }
-
-  ngOnInit() {}
 
   buildSkills() {
     const skillsArr = this.skills.map((skill) => {
@@ -55,8 +57,9 @@ export class ProfilePageComponent implements OnInit {
       console.log(this.registrationForm.value);
     }
   }
+
   editUser() {
-    let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
+    let info = JSON.parse(localStorage.getItem('loginInfo') || '{}');
     this.router.navigate(['user/userDash/editProfile'], {
       state: { email: info.email },
     });

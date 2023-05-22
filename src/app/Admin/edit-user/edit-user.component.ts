@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChange } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataManagementService } from '../../Services/DataManagement/data-management.service';
+import { Users } from 'src/app/Models/UserData';
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css'],
 })
-export class EditUserComponent implements OnInit {
+export class EditUserComponent implements OnInit{
   registrationForm!: FormGroup;
+  currentUser : Users
+  updatedUser : Users
   userEmail: string;
   role: string;
   selectedSkills: string[] = [];
+  roles : string[] = ["Admin", "User"]
   skillsList: string[] = ['HTML', 'CSS', 'JavaScript', 'Angular', 'React', 'Vue',];
 
   constructor(
@@ -22,46 +26,50 @@ export class EditUserComponent implements OnInit {
     let state = this.router.getCurrentNavigation()?.extras.state as {
       email: string;
     };
-    console.log("satate is :", state);
     if(!state)
     {
       this.router.navigate(['admin/adminDash/list']);
     }
     this.userEmail = state.email;
-    console.log(this.userEmail);
   }
 
   ngOnInit() {
-    let user = this.dataService.findUserByEmail(this.userEmail);
-    this.role = user.role;
-    this.registrationForm = this.fb.group({
-      role: [user?.role, Validators.required],
-      userName: [user?.userName, Validators.required],
-      email: [user?.email, [Validators.required, Validators.email]],
-      contact: [user?.contact, Validators.required],
-      skills: [user?.skills]
-    });
-    this.registrationForm.value.skills.forEach((x : any)=> this.selectedSkills.push(x))
+    let user$ = this.dataService.findUserByEmail(this.userEmail);
+    user$.subscribe((data)=>{
+      this.currentUser = data;
+      console.log("current user",this.currentUser,this.currentUser?.email, this.currentUser?.userName );
+      this.registrationForm = this.fb.group({
+        role: [this.currentUser.role],
+        userName: this.currentUser.userName,
+        email:this.currentUser.email,
+        contact: this.currentUser.contact,
+        skills: [this.currentUser?.skills]
+      });
+      this.registrationForm.get("role")?.disable();
+      this.registrationForm.get("email")?.disable();
+      console.log("registration form",this.registrationForm );
+      this.registrationForm.value.skills.forEach((x : any)=> this.selectedSkills.push(x))
+    })
     console.log(this.selectedSkills)
   }
 
- 
+  ngOnChanges(change : SimpleChange){
 
-  passwordMatchValidator(frm: FormGroup) {
-    return frm.controls['password'].value ===
-      frm.controls['confirmPassword'].value
-      ? null
-      : { mismatch: true };
   }
 
   updateUser() {
-    if (this.registrationForm.valid) {
+      console.log()
       console.log(this.registrationForm.value);
       console.log(this.dataService.updateUser(this.registrationForm.value));
-      let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
+      // let info= JSON.parse(localStorage.getItem('loginInfo') || '{}')
+      let updatedUser$ = this.dataService.updateUser(this.registrationForm.value)
+      updatedUser$.subscribe((data)=>{
+        console.log("updated user data", data)
+        this.updatedUser = data
+      })
       this.router.navigate(['admin/adminDash/list'], {
-        state: { email: info.email },
+        state: { email: this.updatedUser.email },
       });
     }
   }
-}
+

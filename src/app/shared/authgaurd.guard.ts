@@ -36,7 +36,7 @@ export class AuthgaurdGuard implements CanActivate {
         return false;
       }
     }
-    let expireTime = parseInt(this.auth.IsLoggedIn());
+    let expireTime = parseInt(this.auth.isLoggedIn());
     console.log('currenttime and expireTime', Date.now(), expireTime);
     if (expireTime < Date.now()) {
       console.log("token expired !!!!!")
